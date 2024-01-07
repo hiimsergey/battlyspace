@@ -1,7 +1,7 @@
 # Battlyspace
 [Another](https://github.com/hiimsergey/flappyspace) small game I made playing with [Bevy Engine](https://bevyengine.org).
 
-You play as a small ship trying to survive in a narrow space by moving and shooting the rocks.
+You play as a small ship trying to survive in a narrow space by moving around and shooting rocks.
 
 <!-- TODO add screenshot -->
 
