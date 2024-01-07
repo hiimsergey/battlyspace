@@ -1,0 +1,11 @@
+[package]
+name = "battlyspace"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fastrand = "2.0.1"
+
+[dependencies.bevy]
+version = "0.12.1"
+features = ["wayland"]
