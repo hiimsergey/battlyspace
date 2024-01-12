@@ -32,14 +32,14 @@ fn rotate_ship(
 /// Spawns the Ship entity at the center of the screen
 ///
 /// The ship will be shown in the menu screen and in-game
-fn spawn_ship(
+pub fn spawn_ship(
     mut commands: Commands,
     assets: Res<AssetServer>
 ) {
     commands.spawn((
         SpriteBundle {
             texture: assets.load("sprites/ship.png"),
-            transform: Transform::from_xyz(0., 0., 1.1)
+            transform: Transform::from_xyz(0., 0., 1.)
                 .with_scale(Vec3::splat(3.)),
             ..default()
         },
@@ -56,7 +56,7 @@ fn spawn_menu_text(mut commands: Commands, assets: Res<AssetServer>) {
     commands.spawn((
         text_from_str(
             &assets,
-            "Battly Space",
+            "Battlyspace",
             HEADING_SIZE,
             Color::WHITE,
             HEADING_Y

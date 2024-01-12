@@ -15,8 +15,6 @@ impl Plugin for GamePlugin {
             .add_systems(
                 Update,
                 (
-                    // TODO write and uncomment these systems
-                    // update_scoreboard,
                     idle_ship_impulse,
 
                     spawn_rocks,
@@ -30,19 +28,22 @@ impl Plugin for GamePlugin {
                     check_pause
                 )
                 .run_if(in_state(GameState::Game))
-            );
+            )
+            .add_systems(OnExit(GameState::Game), cleanup::<Scoreboard>);
     }
 }
 
 /// Looks for collisions between bullets and rocks and alters the former accordingly
 fn check_bullet_collisions(
     mut commands: Commands,
+    mut score_query: Query<&mut Scoreboard>,
+    mut score_text_query: Query<&mut Text, With<Scoreboard>>,
+    mut rock_query: Query<(Entity, &Transform, &mut Rock)>,
     assets: Res<AssetServer>,
-    bullet_query: Query<(Entity, &Transform), With<Bullet>>,
-    rock_query: Query<(Entity, &Transform), With<Rock>>
+    bullet_query: Query<(Entity, &Transform), With<Bullet>>
 ) {
     for (bullet_entity, bullet_transform) in &bullet_query {
-        for (rock_entity, rock_transform) in &rock_query {
+        for (rock_entity, rock_transform, mut rock) in &mut rock_query {
             if collide(
                 bullet_transform.translation,
                 bullet_transform.scale.truncate() * 10.5, // TODO VALUE
@@ -50,9 +51,16 @@ fn check_bullet_collisions(
                 // TODO COMMENT
                 rock_transform.scale.truncate() * 11.5
             ).is_some() {
-                play_sound(&mut commands, &assets, "crash");
                 commands.entity(bullet_entity).despawn();
-                commands.entity(rock_entity).despawn();
+                rock.hp -= 1;
+                if rock.hp == 0 {
+                    let mut scoreboard = score_query.single_mut();
+                    scoreboard.score += 1;
+                    score_text_query.single_mut().sections[0].value =
+                        scoreboard.score.to_string();
+                    play_sound(&mut commands, &assets, "crash");
+                    commands.entity(rock_entity).despawn();
+                }
             }
         }
     }
@@ -63,7 +71,9 @@ fn check_pause(
     mut game_state: ResMut<NextState<GameState>>,
     key: Res<Input<KeyCode>>
 ) {
-    if key.any_just_pressed([KeyCode::Escape, KeyCode::P]) {
+    if key.any_just_pressed(
+        [KeyCode::Escape, KeyCode::ShiftLeft, KeyCode::ShiftRight, KeyCode::P]
+    ) {
         game_state.set(GameState::Pause);
     }
 }
@@ -149,17 +159,22 @@ fn spawn_rocks(
                     .with_scale(Vec3::splat(3.)),
                 ..default()
             },
-            Rock
+            Rock { hp: fastrand::u8(1..=5) } // TODO VALUE
         ));
     }
 }
 
 /// TODO
 /// Spawns score counter as a big number in-game
-fn spawn_score_counter() {}
+fn spawn_score_counter(mut commands: Commands, assets: Res<AssetServer>) {
+    commands.spawn((
+        text_from_str(&assets, "0", HEADING_SIZE, Color::WHITE, HEADING_Y),
+        Scoreboard { score: 0 }
+    ));
+}
 
 /// Controls the movement of bullets
-fn update_bullets(mut query: Query<&mut Transform, With<Bullet>>) {
+pub fn update_bullets(mut query: Query<&mut Transform, With<Bullet>>) {
     for mut transform in query.iter_mut() {
         let movement_direction = transform.rotation * Vec3::Y;
         transform.translation += movement_direction * BULLET_VELOCITY;

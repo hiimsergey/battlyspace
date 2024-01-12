@@ -9,8 +9,7 @@
         // how long the periods are until you get new bullets
         // how many bullets you get
 // TODO FEATURE make the rocks get faster with time
-// TODO FEATURE ADD pause function (spacebar)
-// TODO FEATURE WASD and HJKL
+// TODO FEATURE custom texture for low hp
 // TODO FEATURE add non-stop shooting if key.pressed(KeyCode::Space)
 // TODO END how to embed resources
 // TODO END how to add a window icon
@@ -33,7 +32,7 @@ fn main() {
                     primary_window: Some(Window {
                         present_mode: PresentMode::AutoVsync,
                         mode: WindowMode::Windowed,
-                        title: "Battly Space".to_string(),
+                        title: "Battlyspace".to_string(),
                         resizable: false,
                         resolution: WindowResolution::new(BOUNDS.x, BOUNDS.y),
                         ..default()

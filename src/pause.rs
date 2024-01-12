@@ -1,15 +1,19 @@
 use bevy::prelude::*;
-use battlyspace::GameState;
+use battlyspace::*;
 
 /// Custom game plugin for all things on the Pause screen
 pub struct PausePlugin;
 
+/// Tag component for entities added on the menu screen
+#[derive(Component)]
+pub struct OnPauseScreen;
+
 impl Plugin for PausePlugin {
     fn build(&self, app: &mut App) {
         app
-            // TODO
-            // .add_systems(OnEnter(GameState::Pause), (load_rock_timer, spawn_score_counter))
-            .add_systems(Update, check_unpause.run_if(in_state(GameState::Pause)));
+            .add_systems(OnEnter(GameState::Pause), spawn_pause_text)
+            .add_systems(Update, check_unpause.run_if(in_state(GameState::Pause)))
+            .add_systems(OnExit(GameState::Pause), cleanup::<OnPauseScreen>);
     }
 }
 
@@ -21,4 +25,18 @@ fn check_unpause(
     if key.any_just_pressed([KeyCode::Escape, KeyCode::P]) {
         game_state.set(GameState::Game);
     }
+}
+
+/// Spawns a text reading "Pause" in the Pause screen
+fn spawn_pause_text(mut commands: Commands, assets: Res<AssetServer>) {
+    commands.spawn((
+        text_from_str(
+            &assets,
+            "Pause",
+            HEADING_SIZE,
+            Color::SILVER,
+            HEADING_Y
+        ),
+        OnPauseScreen
+    ));
 }

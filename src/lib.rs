@@ -38,7 +38,9 @@ pub struct Bullet;
 
 /// Component for rocks spawned around the game area
 #[derive(Component)]
-pub struct Rock;
+pub struct Rock {
+    pub hp: u8
+}
 
 
 
@@ -49,12 +51,12 @@ pub struct TextRotation;
 /// Component for tracking the game score
 #[derive(Component)]
 pub struct Scoreboard {
-    pub score: i32
+    pub score: usize
 }
 
 /// Resource for storing the highscore
 #[derive(Resource)]
-pub struct Highscore(pub i32);
+pub struct Highscore(pub usize);
 
 /// Timer resource for rock spawning
 #[derive(Resource, Deref,DerefMut)]
@@ -63,15 +65,13 @@ pub struct RockTimer(pub Timer);
 
 
 /// Despawns all entities for a component
-pub fn cleanup<T: Component>(
-    mut commands: Commands,
-    query: Query<Entity, With<T>>
-) {
+pub fn cleanup<T: Component>(mut commands: Commands, query: Query<Entity, With<T>>) {
     for entity in &query {
         commands.entity(entity).despawn();
     }
 }
 
+// TODO change this desciprtions after UI update
 /// Checks for user input, either launches game or About screen
 ///
 /// Is applied in Menu and Game Over screen
@@ -81,6 +81,9 @@ pub fn lobby_input(
     assets: Res<AssetServer>,
     key: Res<Input<KeyCode>>
 ) {
+    // If user presses Esc, quits game
+    if key.any_just_pressed([KeyCode::Escape, KeyCode::Q]) { std::process::exit(0); }
+
     // If user presses X, the game launches
     if key.just_pressed(KeyCode::X) {
         play_sound(&mut commands, &assets, "start");
@@ -95,11 +98,7 @@ pub fn lobby_input(
 }
 
 /// Plays sound at ./assets/sounds/`sound`.ogg by spawning AudioBundle
-pub fn play_sound(
-    commands: &mut Commands,
-    assets: &Res<AssetServer>,
-    sound: &str
-) {
+pub fn play_sound(commands: &mut Commands, assets: &Res<AssetServer>, sound: &str) {
     commands.spawn(
         AudioBundle {
             source: assets.load(format!("sounds/{sound}.ogg")),

@@ -16,11 +16,15 @@ pub const ROCK_VELOCITY: f32 = 1.; // TODO VALUE
 pub const RADIUS: f32 = BOUNDS.x * 0.5 + 128.; // TODO VALUE
 
 
+
 /// Size of heading text
 pub const HEADING_SIZE: f32 = 100.;
 
 /// Y-coordinate of heading text
 pub const HEADING_Y: f32 = 200.;
+
+/// Y-coordinate of highscore text
+pub const HIGHSCORE_Y: f32 = HEADING_Y - 50.;
 
 /// Size of input hints ("Press \<key\> to \<action\>")
 pub const INPUT_HINT_SIZE: f32 = 50.;
@@ -37,7 +41,7 @@ pub const INPUT_HINT_LOWER_Y: f32 = -270.;
 
 
 /// Text you're going to see on the About screen
-pub const ABOUT_TEXT: &str = "Battly Space
+pub const ABOUT_TEXT: &str = "Battlyspace
 <https://github.com/hiimsergey/battlyspace>
 
 Built with Bevy Engine
@@ -50,8 +54,3 @@ pub const ABOUT_TEXT_SIZE: f32 = 30.;
 
 /// Color of the text on the About screen
 pub const ABOUT_TEXT_COLOR: Color = Color::YELLOW;
-
-
-
-/// Y-coordinate of highscore text
-pub const HIGHSCORE_Y: f32 = HEADING_Y - 50.;
