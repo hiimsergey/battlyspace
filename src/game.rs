@@ -71,9 +71,7 @@ fn check_pause(
     mut game_state: ResMut<NextState<GameState>>,
     key: Res<Input<KeyCode>>
 ) {
-    if key.any_just_pressed(
-        [KeyCode::Escape, KeyCode::ShiftLeft, KeyCode::ShiftRight, KeyCode::P]
-    ) {
+    if key.any_just_pressed(KEYS_PAUSE) {
         game_state.set(GameState::Pause);
     }
 }
@@ -106,7 +104,7 @@ fn check_ship_collisions(
 /// look like it's actually in space
 fn idle_ship_impulse(mut query: Query<(&mut Transform, &Ship)>, time: Res<Time>) {
     let (mut transform, ship) = query.single_mut();
-    transform.translation += 20. * ship.impulse_direction * time.delta_seconds();
+    transform.translation += 50. * ship.impulse_direction * time.delta_seconds(); // TODO VALUE
 }
 
 /// Repeatedly loads RockTimer to queue new rocks to be spawned
@@ -159,7 +157,7 @@ fn spawn_rocks(
                     .with_scale(Vec3::splat(3.)),
                 ..default()
             },
-            Rock { hp: fastrand::u8(1..=5) } // TODO VALUE
+            Rock { hp: fastrand::u8(1..=5), speed: ROCK_VELOCITY } // TODO VALUE
         ));
     }
 }
@@ -182,10 +180,13 @@ pub fn update_bullets(mut query: Query<&mut Transform, With<Bullet>>) {
 }
 
 /// Controls the movement of rocks
-pub fn update_rocks(mut query: Query<&mut Transform, With<Rock>>) {
-    for mut transform in query.iter_mut() {
+pub fn update_rocks(mut query: Query<(&mut Transform, &mut Rock)>) {
+    for (mut transform, mut rock) in query.iter_mut() {
         let movement_direction = transform.rotation * Vec3::Y;
-        transform.translation += movement_direction * ROCK_VELOCITY;
+        transform.translation += movement_direction * rock.speed;
+
+        // TODO if settings.accelerate ...
+        rock.speed += 0.01;
     }
 }
 
@@ -199,17 +200,13 @@ fn update_ship(
 ) {
     let (mut transform, mut ship) = quey.single_mut();
 
-    if ship.rotation_speed.abs() > 0.1 { ship.rotation_speed *= 0.9; }
+    if ship.rotation_speed.abs() > 0.5 { ship.rotation_speed *= 0.8; } // TODO VALUE
     if ship.movement_speed > 50. { ship.movement_speed *= 0.9; }
     
-    if key.any_pressed([KeyCode::Left, KeyCode::A, KeyCode::H]) {
-        ship.rotation_speed += 0.5
-    }
-    if key.any_pressed([KeyCode::Right, KeyCode::D, KeyCode::L]) {
-        ship.rotation_speed -= 0.5
-    }
+    if key.any_pressed(KEYS_TURN_LEFT) { ship.rotation_speed += 0.5 }
+    if key.any_pressed(KEYS_TURN_RIGHT) { ship.rotation_speed -= 0.5 }
     
-    if key.just_pressed(KeyCode::Space) {
+    if key.any_just_pressed(KEYS_SHOOT) {
         shoot(&mut commands, &assets, &mut transform);
         play_sound(&mut commands, &assets, "shoot");
     }
@@ -225,18 +222,19 @@ fn update_ship(
     // movement speed and delta time
     let movement_distance = ship.movement_speed * time.delta_seconds();
 
-    if key.any_pressed([KeyCode::Up, KeyCode::W, KeyCode::K]) {
+    if key.any_pressed(KEYS_FORWARD) {
         if ship.movement_speed < 500. {
             ship.movement_speed *= 1.2;
         }
 
         // Updates the ship translation 
         transform.translation += movement_direction * movement_distance;
+
+        // TODO COMMENT
+        ship.impulse_direction = movement_direction;
     }
 
     // Bounds the ship within the invisible level bounds
     let extents = Vec3::from((BOUNDS / 2., 0.));
     transform.translation = transform.translation.min(extents).max(-extents);
-
-    if key.just_released(KeyCode::Up) { ship.impulse_direction = movement_direction; }
 }

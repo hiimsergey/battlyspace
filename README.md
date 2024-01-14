@@ -11,7 +11,7 @@ You play as a small ship trying to survive in a narrow space by moving around an
 | \<arrow up\> / W / K | Move forth |
 | \<arrow left\> / A / H | Turn left |
 | \<arrow right\> / D / L | Turn left |
-| \<spacebar\> | Shoot |
+| \<spacebar\> / F | Shoot |
 | \<escape\> / \<shift\> / P | Pause |
 
 <!-- TODO add screenshot at the bottom -->

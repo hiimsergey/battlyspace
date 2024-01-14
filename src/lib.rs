@@ -23,7 +23,6 @@ pub enum GameState {
 }
 
 
-
 /// Player component with variable velocity
 #[derive(Component)]
 pub struct Ship {
@@ -39,9 +38,9 @@ pub struct Bullet;
 /// Component for rocks spawned around the game area
 #[derive(Component)]
 pub struct Rock {
-    pub hp: u8
+    pub hp: u8,
+    pub speed: f32
 }
-
 
 
 /// Tag component for rotating components
@@ -61,7 +60,6 @@ pub struct Highscore(pub usize);
 /// Timer resource for rock spawning
 #[derive(Resource, Deref,DerefMut)]
 pub struct RockTimer(pub Timer);
-
 
 
 /// Despawns all entities for a component
@@ -123,13 +121,13 @@ pub fn text_from_str(
     assets: &Res<AssetServer>,
     text: &str,
     font_size: f32,
-    text_color: Color,
+    color: Color,
     text_y: f32
 ) -> Text2dBundle {
     let text_style = TextStyle {
         font: assets.load("fonts/PixelifySans-SemiBold.ttf"),
         font_size,
-        color: text_color
+        color
     };
 
     Text2dBundle {

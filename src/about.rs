@@ -62,7 +62,5 @@ fn about_input(
     mut game_state: ResMut<NextState<GameState>>,
     key: Res<Input<KeyCode>>
 ) {
-    if key.just_pressed(KeyCode::X) {
-        game_state.set(GameState::Menu);
-    }
+    if key.just_pressed(KeyCode::X) { game_state.set(GameState::Menu); }
 }

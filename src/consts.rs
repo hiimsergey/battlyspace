@@ -1,9 +1,35 @@
-use bevy::prelude::{Color, Vec2};
+use bevy::prelude::{Color, KeyCode, Vec2};
+
+/* ------------------------------- GAME FIELD ------------------------------- */
 
 /// Bounds within which the ship can move
 pub const BOUNDS: Vec2 = Vec2::splat(800.); // TODO get sane values
 
+/// Radius describing the circle on which new rocks are spawned with (0, 0, 0)
+/// being the cneter
+pub const RADIUS: f32 = BOUNDS.x * 0.5 + 128.; // TODO VALUE
 
+
+/* ----------------------------- KEY BINDINGS ------------------------------- */
+
+/// Keys that trigger forward movement
+pub const KEYS_FORWARD: [KeyCode; 3] = [KeyCode::Up, KeyCode::W, KeyCode::K];
+
+/// Keys that trigger turning left/counterclockwise
+pub const KEYS_TURN_LEFT: [KeyCode; 3] = [KeyCode::Left, KeyCode::A, KeyCode::H];
+
+/// Keys that trigger turning right/clockwise
+pub const KEYS_TURN_RIGHT: [KeyCode; 3] = [KeyCode::Right, KeyCode::D, KeyCode::L];
+
+/// Keys that trigger shooting
+pub const KEYS_SHOOT: [KeyCode; 2] = [KeyCode::Space, KeyCode::F];
+
+/// Keys that trigger Pause
+pub const KEYS_PAUSE: [KeyCode; 4] =
+    [KeyCode::Escape, KeyCode::ShiftLeft, KeyCode::ShiftRight, KeyCode::P];
+
+
+/* -------------------------------- PHYSICS --------------------------------- */
 
 /// Speed of the bullets
 pub const BULLET_VELOCITY: f32 = 10.; // TODO VALUE
@@ -11,11 +37,8 @@ pub const BULLET_VELOCITY: f32 = 10.; // TODO VALUE
 /// Speed of the rocks
 pub const ROCK_VELOCITY: f32 = 1.; // TODO VALUE
 
-/// Radius describing the circle on which new rocks are spawned with (0, 0, 0)
-/// being the cneter
-pub const RADIUS: f32 = BOUNDS.x * 0.5 + 128.; // TODO VALUE
 
-
+/* ------------------------------- TEXT BOXES ------------------------------- */
 
 /// Size of heading text
 pub const HEADING_SIZE: f32 = 100.;
@@ -23,8 +46,10 @@ pub const HEADING_SIZE: f32 = 100.;
 /// Y-coordinate of heading text
 pub const HEADING_Y: f32 = 200.;
 
+
 /// Y-coordinate of highscore text
 pub const HIGHSCORE_Y: f32 = HEADING_Y - 50.;
+
 
 /// Size of input hints ("Press \<key\> to \<action\>")
 pub const INPUT_HINT_SIZE: f32 = 50.;
@@ -37,7 +62,6 @@ pub const INPUT_HINT_UPPER_Y: f32 = -170.;
 
 /// Y-coordinate of lower input hint ("Press \<key\> to \<action\>"), if there are two
 pub const INPUT_HINT_LOWER_Y: f32 = -270.;
-
 
 
 /// Text you're going to see on the About screen

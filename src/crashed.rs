@@ -24,6 +24,7 @@ impl Plugin for CrashedPlugin {
                     .run_if(in_state(GameState::Crashed))
             )
             .add_systems(OnExit(GameState::Crashed), (
+                cleanup::<Bullet>,
                 cleanup::<Rock>,
                 cleanup::<Scoreboard>,
                 cleanup::<OnCrashedScreen>,

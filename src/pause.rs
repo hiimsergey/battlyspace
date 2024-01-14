@@ -22,7 +22,7 @@ fn check_unpause(
     mut game_state: ResMut<NextState<GameState>>,
     key: Res<Input<KeyCode>>
 ) {
-    if key.any_just_pressed([KeyCode::Escape, KeyCode::P]) {
+    if key.any_just_pressed(KEYS_PAUSE) {
         game_state.set(GameState::Game);
     }
 }

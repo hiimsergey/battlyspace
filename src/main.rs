@@ -8,9 +8,11 @@
     // bullets
         // how long the periods are until you get new bullets
         // how many bullets you get
+        // bullet speed
+        // bool: the ability to shoot
 // TODO FEATURE make the rocks get faster with time
 // TODO FEATURE custom texture for low hp
-// TODO FEATURE add non-stop shooting if key.pressed(KeyCode::Space)
+// TODO FEATURE pause sound
 // TODO END how to embed resources
 // TODO END how to add a window icon
 use bevy::prelude::*;
@@ -64,9 +66,4 @@ fn main() {
 /// First system to run
 ///
 /// Spawns default 2D camera bundle
-fn setup(
-    mut commands: Commands
-) {
-    // Spawns default camera setup
-    commands.spawn(Camera2dBundle::default());
-}
+fn setup(mut commands: Commands) { commands.spawn(Camera2dBundle::default()); }

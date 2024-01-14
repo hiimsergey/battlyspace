@@ -25,9 +25,7 @@ impl Plugin for MenuPlugin {
 fn rotate_ship(
     mut ship_query: Query<&mut Transform, With<Ship>>,
     time: Res<Time>
-) {
-    ship_query.single_mut().rotate_z(-0.5 * time.delta_seconds());
-}
+) { ship_query.single_mut().rotate_z(-0.5 * time.delta_seconds()); }
 
 /// Spawns the Ship entity at the center of the screen
 ///
